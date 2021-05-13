@@ -62,22 +62,38 @@ def draw_steer(image, f_steer_angle, l_steer_angle, r_steer_angle):
     res = cv2.add(arrow_roi, arrow_pic)
     image[(Height - arrow_Height): Height, (Width/2 - arrow_Width/2): (Width/2 + arrow_Width/2)] = res
 
-    cv2.imshow('steer', image)
+    #cv2.imshow('steer', image)
 
 def angle_control(f_steer_angle, l_steer_angle, r_steer_angle, Width, center):
-    if r_steer_angle <=360:
-        r_angle= r_steer_angle
-        matrix = cv2.getRotationMatrix2D((Width/2, center), 180+ (r_angle * 1.5), 0.7)
+    kp = 0.2
 
+    if r_steer_angle <=360:
+        
+        # Add
+        r_angle= r_steer_angle * kp
+        if r_angle > 20:
+            r_angle = 20
+        # /Add
+
+        matrix = cv2.getRotationMatrix2D((Width/2, center), 180 - (r_angle), 0.7)
+    
     else :
         if l_steer_angle >= 180:
-            l_angle= l_steer_angle
+            l_angle= l_steer_angle * kp
+            l_angle = -20
+            # /Add
+
             matrix=cv2.getRotationMatrix2D((Width/2,center), 180+(l_angle), 0.7)
         
 
         else :
             if 300 < f_steer_angle < 360:
-                m_angle= f_steer_angle
+                m_angle= f_steer_angle * kp
+
+                # Add
+                m_angle = 0
+                # /Add
+
                 matrix = cv2.getRotationMatrix2D((Width/2, center), m_angle+10, 0.7)
             else:
                 f_angle=f_steer_angle
