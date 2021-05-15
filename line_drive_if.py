@@ -115,4 +115,3 @@ if __name__ == '__main__':
 
         if cv2.waitKey(3) & 0xFF == ord('q'):
             break
-
